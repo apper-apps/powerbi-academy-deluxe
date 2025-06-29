@@ -1,0 +1,100 @@
+@import 'react-toastify/dist/ReactToastify.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom toast overrides */
+.Toastify__toast-container {
+  width: 350px;
+}
+
+.Toastify__toast {
+  border-radius: 8px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.Toastify__toast--success {
+  background: linear-gradient(135deg, #107C10, #16A316);
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, #D13438, #F55);
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, #0078D4, #00BCF2);
+}
+
+/* DAX Code Highlighting */
+.dax-keyword {
+  color: #0078D4;
+  font-weight: 600;
+}
+
+.dax-function {
+  color: #5B2C92;
+  font-weight: 600;
+}
+
+.dax-operator {
+  color: #742774;
+}
+
+.dax-string {
+  color: #107C10;
+}
+
+.dax-number {
+  color: #D13438;
+}
+
+.dax-comment {
+  color: #6B7280;
+  font-style: italic;
+}
+
+/* Progress Ring Animation */
+.progress-ring-circle {
+  transition: stroke-dasharray 0.5s ease-in-out;
+}
+
+/* Syntax highlighting for code editor */
+.code-editor {
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  line-height: 1.5;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #5B2C92;
+  border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #742774;
+}
+
+/* Badge animation */
+.badge-earned {
+  animation: pulse-success 0.6s ease-in-out;
+}
+
+/* Split view divider */
+.split-divider {
+  cursor: col-resize;
+  background: linear-gradient(90deg, transparent, #5B2C92, transparent);
+}
+
+.split-divider:hover {
+  background: linear-gradient(90deg, transparent, #00BCF2, transparent);
+}
