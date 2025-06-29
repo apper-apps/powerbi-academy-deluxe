@@ -1,9 +1,19 @@
-import { motion } from 'framer-motion'
-import ApperIcon from '@/components/ApperIcon'
-import Button from '@/components/atoms/Button'
-import CodeEditor from '@/components/molecules/CodeEditor'
-
+import { motion } from "framer-motion";
+import React, { useState } from "react";
+import ApperIcon from "@/components/ApperIcon";
+import Button from "@/components/atoms/Button";
+import CodeEditor from "@/components/molecules/CodeEditor";
+import VideoPlayer from "@/components/molecules/VideoPlayer";
 const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
+  // State management
+  const [videoProgress, setVideoProgress] = useState(0);
+  const [currentChapter, setCurrentChapter] = useState(null);
+  const [showPractice, setShowPractice] = useState(false);
+  
+  // Derived state
+  const hasVideo = lesson.videoUrl && lesson.videoUrl.length > 0;
+  const hasExercise = lesson.exercises && lesson.exercises.length > 0;
+  
   const handleExerciseValidation = async (code) => {
     // Simulate validation logic
     const isCorrect = code.trim().toLowerCase().includes('sum') || 
@@ -22,6 +32,14 @@ const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
     }
   }
   
+const handleVideoProgress = (progress) => {
+    setVideoProgress(progress.played)
+  }
+
+  const handleChapterChange = (chapter) => {
+    setCurrentChapter(chapter)
+  }
+
   return (
     <div className="h-full flex">
       {/* Instructions Panel */}
@@ -53,6 +71,18 @@ const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
             </h1>
           </div>
           
+          {/* Current Chapter Display */}
+          {currentChapter && (
+            <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+              <div className="flex items-center space-x-2">
+                <ApperIcon name="Play" className="w-4 h-4 text-blue-600" />
+                <span className="text-sm font-medium text-blue-900">
+                  Now Playing: {currentChapter.title}
+                </span>
+              </div>
+            </div>
+          )}
+          
           {/* Lesson Content */}
           <div className="prose prose-gray max-w-none">
             <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-6">
@@ -61,8 +91,7 @@ const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-1">Learning Objective</h3>
                   <p className="text-gray-700 text-sm">
-                    Learn how to create basic calculations in Power BI using DAX formulas 
-                    to analyze sales data and generate meaningful insights.
+                    {lesson.objective || 'Learn how to create basic calculations in Power BI using DAX formulas to analyze sales data and generate meaningful insights.'}
                   </p>
                 </div>
               </div>
@@ -71,31 +100,33 @@ const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-gray-900">Instructions</h3>
               <p className="text-gray-700 leading-relaxed">
-                In this lesson, you'll learn how to create a simple DAX measure to calculate 
-                total sales. DAX (Data Analysis Expressions) is the formula language used in 
-                Power BI to create custom calculations.
+                {lesson.content}
               </p>
               
-              <div className="bg-yellow-50 rounded-lg p-4">
-                <div className="flex items-start space-x-3">
-                  <ApperIcon name="Lightbulb" className="w-5 h-5 text-warning mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-gray-900 mb-1">Tip</h4>
-                    <p className="text-gray-700 text-sm">
-                      Start with the SUM function and reference the Sales[Amount] column. 
-                      DAX is case-insensitive, but it's good practice to use proper casing.
-                    </p>
+              {lesson.tips && (
+                <div className="bg-yellow-50 rounded-lg p-4">
+                  <div className="flex items-start space-x-3">
+                    <ApperIcon name="Lightbulb" className="w-5 h-5 text-warning mt-0.5" />
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Tip</h4>
+                      <p className="text-gray-700 text-sm">
+                        {lesson.tips}
+                      </p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
               
-              <h4 className="font-medium text-gray-900">Steps to Complete:</h4>
-              <ol className="list-decimal list-inside space-y-2 text-gray-700">
-                <li>Create a new measure called "Total Sales"</li>
-                <li>Use the SUM function to aggregate the Sales[Amount] column</li>
-                <li>Test your formula in the code editor</li>
-                <li>Click "Run Code" to validate your solution</li>
-              </ol>
+              {lesson.steps && (
+                <>
+                  <h4 className="font-medium text-gray-900">Steps to Complete:</h4>
+                  <ol className="list-decimal list-inside space-y-2 text-gray-700">
+                    {lesson.steps.map((step, index) => (
+                      <li key={index}>{step}</li>
+                    ))}
+                  </ol>
+                </>
+              )}
             </div>
           </div>
           
@@ -122,48 +153,140 @@ const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
         </motion.div>
       </div>
       
-      {/* Practice Panel */}
-      <div className="w-1/2 p-6 bg-gray-50">
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          className="space-y-6"
-        >
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-gray-900">Practice Exercise</h2>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <ApperIcon name="Code" className="w-4 h-4" />
-              <span>DAX Formula</span>
+      {/* Video/Practice Panel */}
+      <div className="w-1/2 flex flex-col">
+        {/* Toggle Buttons */}
+        {hasVideo && hasExercise && (
+          <div className="bg-white border-b border-gray-200 p-4">
+            <div className="flex space-x-2">
+              <Button
+                variant={!showPractice ? "primary" : "outline"}
+                onClick={() => setShowPractice(false)}
+                className="flex-1"
+              >
+                <ApperIcon name="Play" className="w-4 h-4 mr-1" />
+                Video Demonstration
+              </Button>
+              <Button
+                variant={showPractice ? "primary" : "outline"}
+                onClick={() => setShowPractice(true)}
+                className="flex-1"
+              >
+                <ApperIcon name="Code" className="w-4 h-4 mr-1" />
+                Practice Exercise
+              </Button>
             </div>
           </div>
-          
-          <CodeEditor
-            initialCode="// Create a measure to calculate Total Sales\n// Hint: Use SUM(Sales[Amount])\n\nTotal Sales = "
-            onValidate={handleExerciseValidation}
-            solution="Total Sales = SUM(Sales[Amount])"
-            language="dax"
-          />
-          
-          {/* Power BI Preview Panel */}
-          <div className="bg-white rounded-lg border-2 border-gray-200 p-4">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-medium text-gray-900">Power BI Preview</h3>
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-success rounded-full"></div>
-                <span className="text-xs text-gray-500">Connected</span>
+        )}
+        
+        {/* Content Area */}
+        <div className="flex-1 overflow-hidden">
+          {/* Video Player */}
+          {hasVideo && (!hasExercise || !showPractice) && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="h-full p-6 bg-gray-50"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">Video Demonstration</h2>
+                  <div className="flex items-center space-x-2 text-sm text-gray-500">
+                    <ApperIcon name="Play" className="w-4 h-4" />
+                    <span>Watch & Learn</span>
+                  </div>
+                </div>
+                
+                <VideoPlayer
+                  videoUrl={lesson.videoUrl}
+                  chapters={lesson.chapters || []}
+                  onProgress={handleVideoProgress}
+                  onChapterChange={handleChapterChange}
+                  className="h-96"
+                />
+                
+                {/* Video Progress */}
+                <div className="bg-white rounded-lg p-4 border border-gray-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-gray-700">Video Progress</span>
+                    <span className="text-sm text-gray-600">
+                      {Math.round(videoProgress * 100)}% Complete
+                    </span>
+                  </div>
+                  <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+                    <div 
+                      className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-300"
+                      style={{ width: `${videoProgress * 100}%` }}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-            
-            <div className="bg-gray-50 rounded-lg p-6 min-h-32 flex items-center justify-center">
+            </motion.div>
+          )}
+          
+          {/* Practice Exercise */}
+          {hasExercise && (!hasVideo || showPractice) && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="h-full p-6 bg-gray-50 overflow-y-auto"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-lg font-semibold text-gray-900">Practice Exercise</h2>
+                  <div className="flex items-center space-x-2 text-sm text-gray-500">
+                    <ApperIcon name="Code" className="w-4 h-4" />
+                    <span>DAX Formula</span>
+                  </div>
+                </div>
+                
+                <CodeEditor
+                  initialCode={lesson.exercises[0]?.startingCode || "// Create a measure to calculate Total Sales\n// Hint: Use SUM(Sales[Amount])\n\nTotal Sales = "}
+                  onValidate={handleExerciseValidation}
+                  solution={lesson.exercises[0]?.solution || "Total Sales = SUM(Sales[Amount])"}
+                  language="dax"
+                />
+                
+                {/* Power BI Preview Panel */}
+                <div className="bg-white rounded-lg border-2 border-gray-200 p-4">
+                  <div className="flex items-center justify-between mb-4">
+                    <h3 className="font-medium text-gray-900">Power BI Preview</h3>
+                    <div className="flex items-center space-x-2">
+                      <div className="w-2 h-2 bg-success rounded-full"></div>
+                      <span className="text-xs text-gray-500">Connected</span>
+                    </div>
+                  </div>
+                  
+                  <div className="bg-gray-50 rounded-lg p-6 min-h-32 flex items-center justify-center">
+                    <div className="text-center">
+                      <ApperIcon name="BarChart3" className="w-12 h-12 text-gray-400 mx-auto mb-2" />
+                      <p className="text-gray-500 text-sm">
+                        Your visualization will appear here once you run the code
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          )}
+          
+          {/* Fallback when no video or exercise */}
+          {!hasVideo && !hasExercise && (
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="h-full p-6 bg-gray-50 flex items-center justify-center"
+            >
               <div className="text-center">
-                <ApperIcon name="BarChart3" className="w-12 h-12 text-gray-400 mx-auto mb-2" />
-                <p className="text-gray-500 text-sm">
-                  Your visualization will appear here once you run the code
+                <ApperIcon name="BookOpen" className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">Continue Learning</h3>
+                <p className="text-gray-500">
+                  Review the instructions and complete this lesson to continue.
                 </p>
               </div>
-            </div>
-          </div>
-        </motion.div>
+            </motion.div>
+          )}
+        </div>
       </div>
     </div>
   )

@@ -35,6 +35,12 @@ export const validateExercise = async (lessonId, code) => {
       'Use the SUM() function to aggregate data',
       'Reference columns using TableName[ColumnName] syntax',
       'Check your parentheses and syntax'
-    ]
+]
   }
+}
+
+export const getVideoChapters = async (lessonId) => {
+  await new Promise(resolve => setTimeout(resolve, 100))
+  const lesson = lessons.find(l => l.Id === lessonId)
+  return lesson?.chapters || []
 }
