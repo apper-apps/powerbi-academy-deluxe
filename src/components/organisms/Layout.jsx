@@ -122,22 +122,23 @@ const Layout = () => {
       </AnimatePresence>
       
       {/* Main Content */}
-      <div className="flex-1 flex flex-col min-w-0">
+<div className="flex-1 flex flex-col min-w-0">
         {/* Mobile Header */}
-        <div className="lg:hidden bg-white shadow-md border-b border-gray-200 p-4">
-          <div className="flex items-center justify-between">
+        <div className="lg:hidden bg-white shadow-md border-b border-gray-200 p-3 sm:p-4 pt-safe-top">
+          <div className="flex items-center justify-between min-touch">
             <button
               onClick={() => setMobileMenuOpen(true)}
-              className="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50"
+              className="p-2 rounded-lg text-gray-500 hover:text-primary hover:bg-gray-50 min-touch"
             >
               <ApperIcon name="Menu" className="w-6 h-6" />
             </button>
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
-                <ApperIcon name="Zap" className="w-4 h-4 text-white" />
+              <div className="w-7 h-7 sm:w-8 sm:h-8 bg-gradient-to-br from-primary to-secondary rounded-lg flex items-center justify-center">
+                <ApperIcon name="Zap" className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
               </div>
-              <h1 className="text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                PowerBI Academy
+              <h1 className="text-base sm:text-lg font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                <span className="hidden xs:inline">PowerBI Academy</span>
+                <span className="xs:hidden">PowerBI</span>
               </h1>
             </div>
             <div className="w-10"></div>

@@ -67,39 +67,39 @@ const SettingsPage = () => {
     // Reset logic would go here
   }
   
-  const ToggleSwitch = ({ checked, onChange, label, description }) => (
-    <div className="flex items-center justify-between py-3">
-      <div className="flex-1">
-        <h4 className="font-medium text-gray-900">{label}</h4>
+const ToggleSwitch = ({ checked, onChange, label, description }) => (
+    <div className="flex items-start justify-between py-3 sm:py-4 min-touch">
+      <div className="flex-1 pr-4">
+        <h4 className="font-medium text-gray-900 text-sm-mobile sm:text-base">{label}</h4>
         {description && (
-          <p className="text-sm text-gray-600 mt-1">{description}</p>
+          <p className="text-xs-mobile sm:text-sm text-gray-600 mt-1">{description}</p>
         )}
       </div>
       <button
         onClick={onChange}
-        className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 ${
+        className={`relative inline-flex h-6 w-11 sm:h-7 sm:w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex-shrink-0 min-touch ${
           checked ? 'bg-primary' : 'bg-gray-200'
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-            checked ? 'translate-x-6' : 'translate-x-1'
+          className={`inline-block h-4 w-4 sm:h-5 sm:w-5 transform rounded-full bg-white transition-transform ${
+            checked ? 'translate-x-6 sm:translate-x-6' : 'translate-x-1'
           }`}
         />
       </button>
     </div>
   )
   
-  return (
+return (
     <div className="h-full overflow-y-auto custom-scrollbar">
-      <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <div className="max-w-4xl mx-auto p-3 sm:p-6 space-y-6 sm:space-y-8 pb-safe-bottom">
         {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Settings</h1>
-          <p className="text-gray-600">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Settings</h1>
+          <p className="text-gray-600 text-sm-mobile sm:text-base">
             Customize your Power BI Academy experience to match your learning preferences.
           </p>
         </motion.div>
@@ -109,15 +109,15 @@ const SettingsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="bg-white rounded-xl shadow-lg p-6"
+          className="bg-white rounded-xl shadow-lg p-4 sm:p-6"
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
-              <ApperIcon name="Bell" className="w-5 h-5 text-white" />
+          <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-primary to-secondary rounded-lg flex items-center justify-center">
+              <ApperIcon name="Bell" className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Notifications</h2>
-              <p className="text-sm text-gray-600">Manage how you receive updates and reminders</p>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Notifications</h2>
+              <p className="text-xs-mobile sm:text-sm text-gray-600">Manage how you receive updates and reminders</p>
             </div>
           </div>
           
@@ -154,27 +154,27 @@ const SettingsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
-          className="bg-white rounded-xl shadow-lg p-6"
+          className="bg-white rounded-xl shadow-lg p-4 sm:p-6"
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-r from-info to-accent rounded-lg flex items-center justify-center">
-              <ApperIcon name="Settings" className="w-5 h-5 text-white" />
+          <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-info to-accent rounded-lg flex items-center justify-center">
+              <ApperIcon name="Settings" className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Preferences</h2>
-              <p className="text-sm text-gray-600">Customize your app appearance and behavior</p>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Preferences</h2>
+              <p className="text-xs-mobile sm:text-sm text-gray-600">Customize your app appearance and behavior</p>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm-mobile sm:text-sm font-medium text-gray-700 mb-2">
                 Theme
               </label>
               <select
                 value={settings.preferences.theme}
                 onChange={(e) => handlePreferenceChange('theme', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200"
+                className="w-full px-3 sm:px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200 text-base-mobile min-touch"
               >
                 <option value="light">Light</option>
                 <option value="dark">Dark</option>
@@ -183,13 +183,13 @@ const SettingsPage = () => {
             </div>
             
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm-mobile sm:text-sm font-medium text-gray-700 mb-2">
                 Language
               </label>
               <select
                 value={settings.preferences.language}
                 onChange={(e) => handlePreferenceChange('language', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200"
+                className="w-full px-3 sm:px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200 text-base-mobile min-touch"
               >
                 <option value="en">English</option>
                 <option value="es">Español</option>
@@ -198,14 +198,14 @@ const SettingsPage = () => {
               </select>
             </div>
             
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div className="md:col-span-2">
+              <label className="block text-sm-mobile sm:text-sm font-medium text-gray-700 mb-2">
                 Timezone
               </label>
               <select
                 value={settings.preferences.timezone}
                 onChange={(e) => handlePreferenceChange('timezone', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200"
+                className="w-full px-3 sm:px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200 text-base-mobile min-touch"
               >
                 <option value="UTC">UTC</option>
                 <option value="EST">Eastern Time</option>
@@ -215,7 +215,7 @@ const SettingsPage = () => {
             </div>
           </div>
           
-          <div className="mt-6 pt-6 border-t border-gray-200 space-y-1 divide-y divide-gray-100">
+          <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-gray-200 space-y-1 divide-y divide-gray-100">
             <ToggleSwitch
               checked={settings.preferences.autoSave}
               onChange={() => handlePreferenceChange('autoSave', !settings.preferences.autoSave)}
@@ -236,34 +236,34 @@ const SettingsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-white rounded-xl shadow-lg p-6"
+          className="bg-white rounded-xl shadow-lg p-4 sm:p-6"
         >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-10 h-10 bg-gradient-to-r from-success to-green-600 rounded-lg flex items-center justify-center">
-              <ApperIcon name="GraduationCap" className="w-5 h-5 text-white" />
+          <div className="flex items-center space-x-3 mb-4 sm:mb-6">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-to-r from-success to-green-600 rounded-lg flex items-center justify-center">
+              <ApperIcon name="GraduationCap" className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-xl font-semibold text-gray-900">Learning Settings</h2>
-              <p className="text-sm text-gray-600">Adjust how lessons and exercises are presented</p>
+              <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Learning Settings</h2>
+              <p className="text-xs-mobile sm:text-sm text-gray-600">Adjust how lessons and exercises are presented</p>
             </div>
           </div>
           
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm-mobile sm:text-sm font-medium text-gray-700 mb-2">
                 Difficulty Adjustment
               </label>
               <select
                 value={settings.learning.difficulty}
                 onChange={(e) => handleLearningChange('difficulty', e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200"
+                className="w-full px-3 sm:px-4 py-3 rounded-lg border-2 border-gray-200 focus:border-primary focus:outline-none transition-colors duration-200 text-base-mobile min-touch"
               >
                 <option value="adaptive">Adaptive (Recommended)</option>
                 <option value="beginner">Always Beginner</option>
                 <option value="intermediate">Always Intermediate</option>
                 <option value="advanced">Always Advanced</option>
               </select>
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs-mobile sm:text-sm text-gray-500 mt-1">
                 Adaptive mode adjusts difficulty based on your performance
               </p>
             </div>
@@ -296,12 +296,12 @@ const SettingsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4 }}
-          className="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4"
+          className="flex flex-col space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4"
         >
           <Button
             variant="primary"
             onClick={handleSave}
-            className="flex-1 sm:flex-none"
+            className="flex-1 sm:flex-none min-touch"
           >
             <ApperIcon name="Save" className="w-4 h-4 mr-2" />
             Save Settings
@@ -309,7 +309,7 @@ const SettingsPage = () => {
           <Button
             variant="outline"
             onClick={handleReset}
-            className="flex-1 sm:flex-none"
+            className="flex-1 sm:flex-none min-touch"
           >
             <ApperIcon name="RotateCcw" className="w-4 h-4 mr-2" />
             Reset to Defaults
@@ -321,19 +321,19 @@ const SettingsPage = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
-          className="bg-gray-50 rounded-xl p-6"
+          className="bg-gray-50 rounded-xl p-4 sm:p-6"
         >
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Data & Privacy</h3>
-          <div className="space-y-3">
-            <Button variant="outline" className="w-full sm:w-auto">
+          <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">Data & Privacy</h3>
+          <div className="flex flex-col space-y-3 sm:space-y-2">
+            <Button variant="outline" className="w-full sm:w-auto min-touch">
               <ApperIcon name="Download" className="w-4 h-4 mr-2" />
               Export Learning Data
             </Button>
-            <Button variant="outline" className="w-full sm:w-auto">
+            <Button variant="outline" className="w-full sm:w-auto min-touch">
               <ApperIcon name="Shield" className="w-4 h-4 mr-2" />
               Privacy Settings
             </Button>
-            <Button variant="danger" className="w-full sm:w-auto">
+            <Button variant="danger" className="w-full sm:w-auto min-touch">
               <ApperIcon name="Trash2" className="w-4 h-4 mr-2" />
               Clear All Progress
             </Button>

@@ -5,15 +5,24 @@
 
 /* Custom toast overrides */
 .Toastify__toast-container {
-  width: 350px;
+  width: min(350px, calc(100vw - 2rem));
+  max-width: 100%;
+}
+
+@media (max-width: 640px) {
+  .Toastify__toast-container {
+    left: 1rem !important;
+    right: 1rem !important;
+    width: auto !important;
+  }
 }
 
 .Toastify__toast {
   border-radius: 8px;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 0.5rem;
 }
-
 .Toastify__toast--success {
   background: linear-gradient(135deg, #107C10, #16A316);
 }
@@ -70,6 +79,12 @@
   width: 6px;
 }
 
+@media (max-width: 768px) {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+  }
+}
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 3px;
@@ -82,6 +97,45 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #742774;
+}
+
+/* Mobile-friendly scrolling */
+@supports (-webkit-touch-callout: none) {
+  .custom-scrollbar {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Touch-friendly minimum sizes */
+.min-touch {
+  min-height: 44px;
+  min-width: 44px;
+}
+
+/* Mobile typography improvements */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+  
+  .text-xs { font-size: 11px; line-height: 16px; }
+  .text-sm { font-size: 13px; line-height: 18px; }
+  .text-base { font-size: 15px; line-height: 22px; }
+  .text-lg { font-size: 17px; line-height: 24px; }
+  .text-xl { font-size: 19px; line-height: 26px; }
+}
+
+/* Mobile interaction improvements */
+@media (max-width: 768px) {
+  button, .btn, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  input, select, textarea {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
 }
 
 /* Badge animation */

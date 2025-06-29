@@ -23,7 +23,7 @@ function App() {
             <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
-        <ToastContainer
+<ToastContainer
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}
@@ -34,7 +34,13 @@ function App() {
           draggable
           pauseOnHover
           theme="colored"
-          style={{ zIndex: 9999 }}
+          className="!mt-safe-top"
+          toastClassName="!text-sm sm:!text-base !rounded-lg !mx-2 sm:!mx-0"
+          style={{ 
+            zIndex: 9999,
+            width: 'auto',
+            maxWidth: 'calc(100vw - 2rem)'
+          }}
         />
       </div>
     </Router>

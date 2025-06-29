@@ -66,12 +66,12 @@ const CodeEditor = ({
     setCode(solution)
   }
   
-  return (
+return (
     <div className="bg-white rounded-lg border-2 border-gray-200 overflow-hidden">
-      <div className="flex items-center justify-between bg-gray-50 px-4 py-2 border-b border-gray-200">
+      <div className="flex items-center justify-between bg-gray-50 px-3 sm:px-4 py-2 border-b border-gray-200">
         <div className="flex items-center space-x-2">
           <ApperIcon name="Code" className="w-4 h-4 text-gray-500" />
-          <span className="text-sm font-medium text-gray-700">
+          <span className="text-sm-mobile sm:text-sm font-medium text-gray-700">
             {language.toUpperCase()} Editor
           </span>
         </div>
@@ -82,9 +82,11 @@ const CodeEditor = ({
               variant="outline"
               size="sm"
               onClick={handleShowSolution}
+              className="min-touch"
             >
               <ApperIcon name="Lightbulb" className="w-4 h-4 mr-1" />
-              Show Solution
+              <span className="hidden sm:inline">Show Solution</span>
+              <span className="sm:hidden">Solution</span>
             </Button>
           )}
           
@@ -94,13 +96,15 @@ const CodeEditor = ({
               size="sm"
               onClick={handleValidate}
               disabled={isValidating || readOnly}
+              className="min-touch"
             >
               {isValidating ? (
                 <ApperIcon name="Loader" className="w-4 h-4 mr-1 animate-spin" />
               ) : (
                 <ApperIcon name="Play" className="w-4 h-4 mr-1" />
               )}
-              {isValidating ? 'Validating...' : 'Run Code'}
+              <span className="hidden sm:inline">{isValidating ? 'Validating...' : 'Run Code'}</span>
+              <span className="sm:hidden">{isValidating ? 'Running...' : 'Run'}</span>
             </Button>
           )}
         </div>
@@ -111,13 +115,14 @@ const CodeEditor = ({
           value={code}
           onChange={(e) => setCode(e.target.value)}
           readOnly={readOnly}
-          className="w-full h-64 p-4 font-mono text-sm bg-white border-none resize-none focus:outline-none code-editor"
+          className="w-full h-48 sm:h-64 p-3 sm:p-4 font-mono text-sm-mobile sm:text-sm bg-white border-none resize-none focus:outline-none code-editor"
           placeholder={`Enter your ${language.toUpperCase()} code here...`}
+          style={{ fontSize: '16px' }} // Prevents zoom on iOS
         />
         
         {language === 'dax' && (
           <div
-            className="absolute inset-0 p-4 font-mono text-sm pointer-events-none overflow-hidden"
+            className="absolute inset-0 p-3 sm:p-4 font-mono text-sm-mobile sm:text-sm pointer-events-none overflow-hidden"
             dangerouslySetInnerHTML={{ __html: highlightDAX(code) }}
             style={{ 
               color: 'transparent',
@@ -132,7 +137,7 @@ const CodeEditor = ({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className={`p-4 border-t ${
+          className={`p-3 sm:p-4 border-t ${
             validationResult.success 
               ? 'bg-green-50 border-green-200' 
               : 'bg-red-50 border-red-200'
@@ -141,17 +146,17 @@ const CodeEditor = ({
           <div className="flex items-start space-x-3">
             <ApperIcon 
               name={validationResult.success ? 'CheckCircle' : 'XCircle'} 
-              className={`w-5 h-5 mt-0.5 ${
+              className={`w-5 h-5 mt-0.5 flex-shrink-0 ${
                 validationResult.success ? 'text-success' : 'text-error'
               }`} 
             />
-            <div className="flex-1">
-              <p className={`font-medium ${
+            <div className="flex-1 min-w-0">
+              <p className={`font-medium text-sm-mobile sm:text-base ${
                 validationResult.success ? 'text-success' : 'text-error'
               }`}>
                 {validationResult.success ? 'Success!' : 'Error'}
               </p>
-              <p className="text-sm text-gray-600 mt-1">
+              <p className="text-xs-mobile sm:text-sm text-gray-600 mt-1">
                 {validationResult.message}
               </p>
               {validationResult.hints && validationResult.hints.length > 0 && (

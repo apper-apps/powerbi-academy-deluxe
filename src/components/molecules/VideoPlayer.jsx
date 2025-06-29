@@ -115,12 +115,13 @@ const VideoPlayer = ({
 
   const progressPercentage = duration > 0 ? (currentTime / duration) * 100 : 0
 
-  return (
+return (
     <div 
       ref={containerRef}
       className={`relative bg-black rounded-lg overflow-hidden ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => playing && setShowControls(false)}
+      onTouchStart={() => setShowControls(true)}
     >
       {/* Video Player */}
       <ReactPlayer
@@ -147,9 +148,9 @@ const VideoPlayer = ({
             <Button
               variant="ghost"
               onClick={handlePlayPause}
-              className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white border-white border-2 w-16 h-16 rounded-full flex items-center justify-center"
+              className="bg-white bg-opacity-20 hover:bg-opacity-30 text-white border-white border-2 w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center min-touch"
             >
-              <ApperIcon name="Play" className="w-8 h-8 ml-1" />
+              <ApperIcon name="Play" className="w-6 h-6 sm:w-8 sm:h-8 ml-1" />
             </Button>
           </motion.div>
         )}
@@ -162,11 +163,11 @@ const VideoPlayer = ({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 20 }}
-            className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black to-transparent p-4"
+            className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black via-black to-transparent p-3 sm:p-4"
           >
             {/* Progress Bar */}
-            <div className="mb-4">
-              <div className="w-full h-1 bg-white bg-opacity-30 rounded-full overflow-hidden">
+            <div className="mb-3 sm:mb-4">
+              <div className="w-full h-1 sm:h-1.5 bg-white bg-opacity-30 rounded-full overflow-hidden">
                 <div 
                   className="h-full bg-white transition-all duration-300"
                   style={{ width: `${progressPercentage}%` }}
@@ -177,7 +178,7 @@ const VideoPlayer = ({
               {chapters.map((chapter, index) => (
                 <div
                   key={index}
-                  className="absolute top-0 w-2 h-1 bg-yellow-400 rounded-full cursor-pointer"
+                  className="absolute top-0 w-2 h-1 sm:h-1.5 bg-yellow-400 rounded-full cursor-pointer min-touch"
                   style={{ left: `${(chapter.time / duration) * 100}%` }}
                   onClick={() => handleChapterClick(chapter)}
                   title={chapter.title}
@@ -187,22 +188,22 @@ const VideoPlayer = ({
 
             {/* Control Buttons */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-4">
                 {/* Play/Pause */}
                 <Button
                   variant="ghost"
                   onClick={handlePlayPause}
-                  className="text-white hover:bg-white hover:bg-opacity-20 p-2"
+                  className="text-white hover:bg-white hover:bg-opacity-20 p-2 min-touch"
                 >
-                  <ApperIcon name={playing ? "Pause" : "Play"} className="w-5 h-5" />
+                  <ApperIcon name={playing ? "Pause" : "Play"} className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
 
-                {/* Volume */}
-                <div className="flex items-center space-x-2">
+                {/* Volume - Hidden on small screens */}
+                <div className="hidden sm:flex items-center space-x-2">
                   <Button
                     variant="ghost"
                     onClick={toggleMute}
-                    className="text-white hover:bg-white hover:bg-opacity-20 p-2"
+                    className="text-white hover:bg-white hover:bg-opacity-20 p-2 min-touch"
                   >
                     <ApperIcon 
                       name={muted || volume === 0 ? "VolumeX" : volume < 0.5 ? "Volume1" : "Volume2"} 
@@ -216,26 +217,39 @@ const VideoPlayer = ({
                     step="0.1"
                     value={muted ? 0 : volume}
                     onChange={handleVolumeChange}
-                    className="w-20 h-1 bg-white bg-opacity-30 rounded-lg appearance-none cursor-pointer"
+                    className="w-16 lg:w-20 h-1 bg-white bg-opacity-30 rounded-lg appearance-none cursor-pointer"
                   />
                 </div>
 
+                {/* Mobile Volume Toggle */}
+                <Button
+                  variant="ghost"
+                  onClick={toggleMute}
+                  className="sm:hidden text-white hover:bg-white hover:bg-opacity-20 p-2 min-touch"
+                >
+                  <ApperIcon 
+                    name={muted || volume === 0 ? "VolumeX" : "Volume2"} 
+                    className="w-4 h-4" 
+                  />
+                </Button>
+
                 {/* Time Display */}
-                <div className="text-white text-sm font-mono">
-                  {formatTime(currentTime)} / {formatTime(duration)}
+                <div className="text-white text-xs sm:text-sm font-mono">
+                  <span className="hidden sm:inline">{formatTime(currentTime)} / {formatTime(duration)}</span>
+                  <span className="sm:hidden">{formatTime(currentTime)}</span>
                 </div>
               </div>
 
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2 sm:space-x-4">
                 {/* Chapters */}
                 {chapters.length > 0 && (
                   <div className="relative">
                     <Button
                       variant="ghost"
                       onClick={() => setShowChapters(!showChapters)}
-                      className="text-white hover:bg-white hover:bg-opacity-20 p-2"
+                      className="text-white hover:bg-white hover:bg-opacity-20 p-2 min-touch"
                     >
-                      <ApperIcon name="List" className="w-5 h-5" />
+                      <ApperIcon name="List" className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Button>
 
                     <AnimatePresence>
@@ -244,18 +258,18 @@ const VideoPlayer = ({
                           initial={{ opacity: 0, y: 10 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: 10 }}
-                          className="absolute bottom-full right-0 mb-2 bg-black bg-opacity-90 rounded-lg p-2 min-w-64"
+                          className="absolute bottom-full right-0 mb-2 bg-black bg-opacity-90 rounded-lg p-2 min-w-48 sm:min-w-64 max-w-xs sm:max-w-sm"
                         >
-                          <div className="max-h-48 overflow-y-auto">
+                          <div className="max-h-32 sm:max-h-48 overflow-y-auto custom-scrollbar">
                             {chapters.map((chapter, index) => (
                               <button
                                 key={index}
                                 onClick={() => handleChapterClick(chapter)}
-                                className={`w-full text-left p-2 rounded hover:bg-white hover:bg-opacity-20 transition-colors ${
+                                className={`w-full text-left p-2 rounded hover:bg-white hover:bg-opacity-20 transition-colors min-touch ${
                                   index === currentChapter ? 'bg-white bg-opacity-20' : ''
                                 }`}
                               >
-                                <div className="text-white text-sm font-medium">{chapter.title}</div>
+                                <div className="text-white text-sm font-medium truncate">{chapter.title}</div>
                                 <div className="text-gray-300 text-xs">{formatTime(chapter.time)}</div>
                               </button>
                             ))}
@@ -270,9 +284,9 @@ const VideoPlayer = ({
                 <Button
                   variant="ghost"
                   onClick={toggleFullscreen}
-                  className="text-white hover:bg-white hover:bg-opacity-20 p-2"
+                  className="text-white hover:bg-white hover:bg-opacity-20 p-2 min-touch"
                 >
-                  <ApperIcon name={isFullscreen ? "Minimize2" : "Maximize2"} className="w-5 h-5" />
+                  <ApperIcon name={isFullscreen ? "Minimize2" : "Maximize2"} className="w-4 h-4 sm:w-5 sm:h-5" />
                 </Button>
               </div>
             </div>
