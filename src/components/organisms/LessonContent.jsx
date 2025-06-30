@@ -40,10 +40,10 @@ const handleVideoProgress = (progress) => {
     setCurrentChapter(chapter)
   }
 
-  return (
-    <div className="h-full flex">
+return (
+    <div className="h-full flex flex-col md:flex-row">
       {/* Instructions Panel */}
-      <div className="w-1/2 p-6 border-r border-gray-200 overflow-y-auto custom-scrollbar">
+      <div className="w-full md:w-1/2 p-6 md:border-r border-gray-200 overflow-y-auto custom-scrollbar order-2 md:order-1">
         <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
@@ -153,8 +153,8 @@ const handleVideoProgress = (progress) => {
         </motion.div>
       </div>
       
-      {/* Video/Practice Panel */}
-      <div className="w-1/2 flex flex-col">
+{/* Video/Practice Panel */}
+      <div className="w-full md:w-1/2 flex flex-col order-1 md:order-2">
         {/* Toggle Buttons */}
         {hasVideo && hasExercise && (
           <div className="bg-white border-b border-gray-200 p-4">
@@ -271,6 +271,7 @@ const handleVideoProgress = (progress) => {
           )}
           
           {/* Fallback when no video or exercise */}
+{/* Fallback when no video or exercise */}
           {!hasVideo && !hasExercise && (
             <motion.div
               initial={{ opacity: 0, x: 20 }}
@@ -280,9 +281,18 @@ const handleVideoProgress = (progress) => {
               <div className="text-center">
                 <ApperIcon name="BookOpen" className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">Continue Learning</h3>
-                <p className="text-gray-500">
+                <p className="text-gray-500 mb-6">
                   Review the instructions and complete this lesson to continue.
                 </p>
+                <Button
+                  variant="primary"
+                  onClick={onNext}
+                  disabled={!isCompleted}
+                  className="min-touch"
+                >
+                  <ApperIcon name="ArrowRight" className="w-4 h-4 mr-2" />
+                  Continue Learning
+</Button>
               </div>
             </motion.div>
           )}
