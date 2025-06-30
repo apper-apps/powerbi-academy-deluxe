@@ -173,14 +173,16 @@ return (
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 sm:gap-6"
+            className="flex overflow-x-auto gap-6 pb-4 scroll-smooth snap-x snap-mandatory custom-scrollbar"
+            style={{ scrollbarWidth: 'thin' }}
           >
-            {filteredAndSortedModules.map((module, index) => (
+{filteredAndSortedModules.map((module, index) => (
               <motion.div
                 key={module.Id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.1 }}
+                className="flex-shrink-0 w-80 sm:w-72 md:w-80 lg:w-96 snap-start"
               >
                 <ModuleCard
                   module={module}
