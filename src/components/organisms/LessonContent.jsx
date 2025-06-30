@@ -126,8 +126,26 @@ return (
                     ))}
                   </ol>
                 </>
-              )}
+)}
             </div>
+          </div>
+          
+          {/* Continue Learning Section */}
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-6 text-center">
+            <ApperIcon name="BookOpen" className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">Continue Learning</h3>
+            <p className="text-gray-600 mb-6">
+              Review the instructions and complete this lesson to continue your learning journey.
+            </p>
+            <Button
+              variant="primary"
+              onClick={onNext}
+              disabled={!isCompleted}
+              className="min-touch"
+            >
+              <ApperIcon name="ArrowRight" className="w-4 h-4 mr-2" />
+              Continue Learning
+            </Button>
           </div>
           
           {/* Navigation */}
@@ -269,33 +287,7 @@ return (
               </div>
             </motion.div>
           )}
-          
-          {/* Fallback when no video or exercise */}
-{/* Fallback when no video or exercise */}
-          {!hasVideo && !hasExercise && (
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="h-full p-6 bg-gray-50 flex items-center justify-center"
-            >
-              <div className="text-center">
-                <ApperIcon name="BookOpen" className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 mb-2">Continue Learning</h3>
-                <p className="text-gray-500 mb-6">
-                  Review the instructions and complete this lesson to continue.
-                </p>
-                <Button
-                  variant="primary"
-                  onClick={onNext}
-                  disabled={!isCompleted}
-                  className="min-touch"
-                >
-                  <ApperIcon name="ArrowRight" className="w-4 h-4 mr-2" />
-                  Continue Learning
-</Button>
-              </div>
-            </motion.div>
-          )}
+)}
         </div>
       </div>
     </div>
