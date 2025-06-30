@@ -171,32 +171,63 @@ const ProgressPage = () => {
             </nav>
           </div>
           
-          <div className="p-6">
+<div className="p-6">
             {activeTab === 'overview' && (
               <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-                <div className="space-y-4">
-                  {detailedProgress.slice(0, 5).map((activity, index) => (
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
+                  <p className="text-sm text-gray-500">{detailedProgress.length} completed lessons</p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+                  {detailedProgress.slice(0, 6).map((activity, index) => (
                     <motion.div
                       key={activity.Id}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center space-x-4 p-4 bg-gray-50 rounded-lg"
+                      className="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-lg transition-shadow duration-200"
                     >
-                      <div className="w-10 h-10 bg-success rounded-full flex items-center justify-center">
-                        <ApperIcon name="Check" className="w-5 h-5 text-white" />
-                      </div>
-                      <div className="flex-1">
-                        <p className="font-medium text-gray-900">{activity.lessonTitle}</p>
-                        <p className="text-sm text-gray-600">{activity.moduleTitle}</p>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-sm text-gray-500">{activity.completedAt}</p>
-                        <Badge variant="success" size="sm">Completed</Badge>
+                      <div className="flex items-start space-x-3">
+                        <div className="w-8 h-8 bg-success rounded-full flex items-center justify-center flex-shrink-0">
+                          <ApperIcon name="Check" className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-gray-900 text-sm leading-tight mb-1 line-clamp-2">
+                            {activity.lessonTitle}
+                          </h4>
+                          <p className="text-xs text-gray-600 mb-2 line-clamp-1">
+                            {activity.moduleTitle}
+                          </p>
+                          <div className="flex items-center justify-between">
+                            <Badge variant="success" size="sm">
+                              Score: {activity.score}%
+                            </Badge>
+                            <p className="text-xs text-gray-500">{activity.completedAt}</p>
+                          </div>
+                        </div>
                       </div>
                     </motion.div>
                   ))}
+                </div>
+                
+                {/* Learning Statistics */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-primary">{progressData.totalHours}h</p>
+                    <p className="text-sm text-gray-600">Total Learning Time</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-success">{detailedProgress.length}</p>
+                    <p className="text-sm text-gray-600">Lessons Completed</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-warning">{Math.round(detailedProgress.reduce((sum, a) => sum + a.score, 0) / detailedProgress.length)}%</p>
+                    <p className="text-sm text-gray-600">Average Score</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-2xl font-bold text-secondary">{progressData.streak}</p>
+                    <p className="text-sm text-gray-600">Day Streak</p>
+                  </div>
                 </div>
               </div>
             )}
@@ -245,27 +276,35 @@ const ProgressPage = () => {
           </div>
         </motion.div>
         
-        {/* Continue Learning CTA */}
+{/* Continue Learning CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6 }}
-          className="bg-gradient-to-r from-primary to-secondary rounded-xl shadow-xl p-8 text-white text-center"
+          className="bg-gradient-to-r from-primary to-secondary rounded-xl shadow-xl p-6 text-white"
         >
-          <ApperIcon name="Target" className="w-16 h-16 mx-auto mb-4 opacity-80" />
-          <h2 className="text-2xl font-bold mb-4">Keep Up The Great Work!</h2>
-          <p className="text-white text-opacity-90 mb-6 max-w-2xl mx-auto">
-            You're {progressData.overallProgress}% through your Power BI learning journey. 
-            Every lesson brings you closer to mastering this powerful tool!
-          </p>
-          <Button
-            variant="secondary"
-            size="lg"
-            onClick={() => navigate('/modules')}
-          >
-            <ApperIcon name="BookOpen" className="w-5 h-5 mr-2" />
-            Continue Learning
-          </Button>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <div className="w-12 h-12 bg-white bg-opacity-20 rounded-lg flex items-center justify-center">
+                <ApperIcon name="Target" className="w-6 h-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-lg font-bold">Keep Up The Great Work!</h2>
+                <p className="text-white text-opacity-90 text-sm">
+                  You're {progressData.overallProgress}% through your Power BI learning journey
+                </p>
+              </div>
+            </div>
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={() => navigate('/modules')}
+              className="flex-shrink-0"
+            >
+              <ApperIcon name="BookOpen" className="w-4 h-4 mr-2" />
+              Continue Learning
+            </Button>
+          </div>
         </motion.div>
       </div>
     </div>
