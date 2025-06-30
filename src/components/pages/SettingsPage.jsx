@@ -75,15 +75,15 @@ const ToggleSwitch = ({ checked, onChange, label, description }) => (
           <p className="text-xs-mobile sm:text-sm text-gray-600 mt-1">{description}</p>
         )}
       </div>
-      <button
+<button
         onClick={onChange}
-        className={`relative inline-flex h-6 w-11 sm:h-7 sm:w-12 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex-shrink-0 min-touch ${
+        className={`relative inline-flex h-5 w-9 sm:h-6 sm:w-10 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 flex-shrink-0 min-touch ${
           checked ? 'bg-primary' : 'bg-gray-200'
         }`}
       >
         <span
-          className={`inline-block h-4 w-4 sm:h-5 sm:w-5 transform rounded-full bg-white transition-transform ${
-            checked ? 'translate-x-6 sm:translate-x-6' : 'translate-x-1'
+          className={`inline-block h-3.5 w-3.5 sm:h-4 sm:w-4 transform rounded-full bg-white transition-transform ${
+            checked ? 'translate-x-4 sm:translate-x-5' : 'translate-x-0.5'
           }`}
         />
       </button>

@@ -209,9 +209,8 @@ const ProgressPage = () => {
                     </motion.div>
                   ))}
                 </div>
-                
-                {/* Learning Statistics */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-gray-200">
+{/* Learning Statistics */}
+                <div className="grid grid-cols-4 gap-4 pt-4 border-t border-gray-200">
                   <div className="text-center">
                     <p className="text-2xl font-bold text-primary">{progressData.totalHours}h</p>
                     <p className="text-sm text-gray-600">Total Learning Time</p>
