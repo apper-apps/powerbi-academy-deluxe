@@ -15,7 +15,7 @@ export const modules = [
   },
   {
     Id: 2,
-    title: 'MODUL 2 - Power BI Desktop & Service Fundamentals',
+    title: 'MODUL 2 - Hands-on Power BI Fundamentals',
     description: 'Hands-on introduction to Power BI Desktop and Power BI Service. Learn to connect to data sources, create visualizations, and build your first report.',
     difficulty: 'Beginner',
     order: 2,
@@ -69,7 +69,7 @@ export const modules = [
   },
   {
     Id: 6,
-    title: 'MODUL 6 - DAX Basic Practice & Assessment',
+    title: 'MODUL 6 - DAX Basics Practice & Assessment',
     description: 'Practice basic DAX functions including SUM, COUNT, CALCULATE, and FILTER. Complete a mini assessment by creating a data model from raw data.',
     difficulty: 'Intermediate',
     order: 6,
@@ -108,37 +108,37 @@ export const modules = [
   },
   {
     Id: 9,
-    title: 'MODUL 9 - Exam Session 1',
+    title: 'EXAM SESSION 1',
     description: 'First comprehensive exam session covering Power Platform fundamentals and Power BI concepts. Test your knowledge with real exam scenarios.',
     difficulty: 'Advanced',
     order: 9,
     estimatedTime: 120,
     lessons: [
-      { Id: 28, title: 'Exam Session 1 - Power Platform Fundamentals', estimatedTime: 60 },
-      { Id: 29, title: 'Exam Session 1 - Power BI Essentials', estimatedTime: 60 }
+      { Id: 28, title: 'EXAM SESSION 1 - Power Platform Fundamentals', estimatedTime: 60 },
+      { Id: 29, title: 'EXAM SESSION 1 - Power BI Essentials', estimatedTime: 60 }
     ]
   },
   {
     Id: 10,
-    title: 'MODUL 10 - Exam Session 2',
+    title: 'EXAM SESSION 2',
     description: 'Second comprehensive exam session focusing on advanced Power BI concepts, DAX formulas, and data modeling scenarios.',
     difficulty: 'Advanced',
     order: 10,
     estimatedTime: 120,
     lessons: [
-      { Id: 30, title: 'Exam Session 2 - Advanced Power BI', estimatedTime: 60 },
-      { Id: 31, title: 'Exam Session 2 - DAX & Data Modeling', estimatedTime: 60 }
+      { Id: 30, title: 'EXAM SESSION 2 - Advanced Power BI', estimatedTime: 60 },
+      { Id: 31, title: 'EXAM SESSION 2 - DAX & Data Modeling', estimatedTime: 60 }
     ]
   },
   {
     Id: 11,
-    title: 'MODUL 11 - TOT and Portfolio',
+    title: 'TOT and Portfolio',
     description: 'Training of Trainers (TOT) session and portfolio development. Apply your knowledge in real-world scenarios and build a comprehensive project portfolio.',
     difficulty: 'Advanced',
     order: 11,
     estimatedTime: 150,
     lessons: [
-      { Id: 32, title: 'Training of Trainers (TOT) Session', estimatedTime: 75 },
+      { Id: 32, title: 'TOT - Training of Trainers Session', estimatedTime: 75 },
       { Id: 33, title: 'Portfolio Development and Review', estimatedTime: 75 }
     ]
   }
