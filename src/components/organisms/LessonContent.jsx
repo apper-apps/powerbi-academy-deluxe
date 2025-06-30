@@ -1,36 +1,73 @@
 import { motion } from "framer-motion";
 import React, { useState } from "react";
+import Chart from "react-apexcharts";
 import ApperIcon from "@/components/ApperIcon";
 import Button from "@/components/atoms/Button";
 import CodeEditor from "@/components/molecules/CodeEditor";
 import VideoPlayer from "@/components/molecules/VideoPlayer";
+
 const LessonContent = ({ lesson, onNext, onPrevious, isCompleted = false }) => {
   // State management
   const [videoProgress, setVideoProgress] = useState(0);
   const [currentChapter, setCurrentChapter] = useState(null);
   const [showPractice, setShowPractice] = useState(false);
+  const [visualizationData, setVisualizationData] = useState(null);
+  const [visualizationLoading, setVisualizationLoading] = useState(false);
   
   // Derived state
   const hasVideo = lesson.videoUrl && lesson.videoUrl.length > 0;
   const hasExercise = lesson.exercises && lesson.exercises.length > 0;
   
-  const handleExerciseValidation = async (code) => {
-    // Simulate validation logic
-    const isCorrect = code.trim().toLowerCase().includes('sum') || 
-                     code.trim().toLowerCase().includes('calculate')
-    
-    return {
-      success: isCorrect,
-      message: isCorrect 
-        ? 'Great job! Your DAX formula is correct.' 
-        : 'Not quite right. Make sure you\'re using the correct DAX functions.',
-      hints: isCorrect ? [] : [
-        'Try using the SUM() function',
-        'Check your table and column references',
-        'Make sure your syntax is correct'
-      ]
+const handleExerciseValidation = async (code) => {
+    try {
+      setVisualizationLoading(true);
+      
+      // Simulate validation logic
+      const isCorrect = code.trim().toLowerCase().includes('sum') || 
+                       code.trim().toLowerCase().includes('calculate');
+      
+      // Generate visualization data if correct
+      if (isCorrect) {
+        // Simulate API delay
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        
+        // Generate sample visualization data
+        setVisualizationData({
+          type: 'bar',
+          title: 'Total Sales by Category',
+          colors: ['#3B82F6', '#8B5CF6', '#10B981'],
+          categories: ['Electronics', 'Clothing', 'Books', 'Home'],
+          series: [{
+            name: 'Sales Amount',
+            data: [45000, 32000, 18000, 27000]
+          }]
+        });
+      } else {
+        setVisualizationData(null);
+      }
+      
+      return {
+        success: isCorrect,
+        message: isCorrect 
+          ? 'Great job! Your DAX formula is correct.' 
+          : 'Not quite right. Make sure you\'re using the correct DAX functions.',
+        hints: isCorrect ? [] : [
+          'Try using the SUM() function',
+          'Check your table and column references',
+          'Make sure your syntax is correct'
+        ]
+      };
+    } catch (error) {
+      console.error('Exercise validation error:', error);
+      return {
+        success: false,
+        message: 'An error occurred while validating your code. Please try again.',
+        hints: ['Check your syntax and try again']
+      };
+    } finally {
+      setVisualizationLoading(false);
     }
-  }
+  };
   
 const handleVideoProgress = (progress) => {
     setVideoProgress(progress.played)
@@ -320,7 +357,7 @@ return (
                   language="dax"
                 />
                 
-                {/* Power BI Preview Panel */}
+{/* Power BI Preview Panel */}
                 <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                   <div className="bg-gray-50 px-5 py-3 border-b border-gray-200">
                     <div className="flex items-center justify-between">
@@ -329,24 +366,109 @@ return (
                         Power BI Preview
                       </h3>
                       <div className="flex items-center space-x-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                        <span className="text-xs text-gray-600 font-medium">Live Preview</span>
+                        <div className={`w-2 h-2 rounded-full ${
+                          visualizationData ? 'bg-green-500 animate-pulse' : 'bg-gray-400'
+                        }`}></div>
+                        <span className="text-xs text-gray-600 font-medium">
+                          {visualizationData ? 'Live Preview' : 'Waiting for DAX'}
+                        </span>
                       </div>
                     </div>
                   </div>
                   
                   <div className="p-6">
-                    <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg p-8 min-h-40 flex items-center justify-center border-2 border-dashed border-gray-300">
-                      <div className="text-center">
-                        <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                          <ApperIcon name="BarChart3" className="w-8 h-8 text-blue-600" />
+                    {visualizationLoading ? (
+                      <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg p-8 min-h-80 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                            <ApperIcon name="Loader" className="w-8 h-8 text-blue-600 animate-spin" />
+                          </div>
+                          <h4 className="font-semibold text-gray-900 mb-2">Generating Visualization</h4>
+                          <p className="text-gray-600 text-sm">Processing your DAX code...</p>
                         </div>
-                        <h4 className="font-semibold text-gray-900 mb-2">Visualization Preview</h4>
-                        <p className="text-gray-600 text-sm leading-relaxed max-w-xs">
-                          Your data visualization will appear here once you run your DAX code successfully
-                        </p>
                       </div>
-                    </div>
+                    ) : visualizationData ? (
+                      <div className="space-y-4">
+                        <div className="text-center mb-4">
+                          <h4 className="font-semibold text-gray-900 text-lg">{visualizationData.title}</h4>
+                          <p className="text-gray-600 text-sm">Generated from your DAX formula</p>
+                        </div>
+                        
+<div className="h-80">
+                          {visualizationData?.type === 'bar' && (
+                            <Chart
+                              options={{
+                                chart: { type: 'bar', toolbar: { show: false } },
+                                plotOptions: { bar: { borderRadius: 4, horizontal: false } },
+                                colors: visualizationData.colors || ['#3B82F6'],
+                                xaxis: { categories: visualizationData.categories || [] },
+                                yaxis: { labels: { formatter: (val) => `$${val?.toLocaleString() || 0}` } },
+                                dataLabels: { enabled: false },
+                                grid: { strokeDashArray: 3 },
+                                theme: { mode: 'light' }
+                              }}
+                              series={visualizationData.series || []}
+                              type="bar"
+                              height="100%"
+                            />
+                          )}
+                          
+{visualizationData?.type === 'donut' && (
+                            <Chart
+                              options={{
+                                chart: { type: 'donut' },
+                                labels: visualizationData.labels || [],
+                                colors: visualizationData.colors || ['#3B82F6'],
+                                legend: { position: 'bottom' },
+                                dataLabels: { enabled: true },
+                                plotOptions: { pie: { donut: { size: '60%' } } }
+                              }}
+                              series={visualizationData.series || []}
+                              type="donut"
+                              height="100%"
+                            />
+                          )}
+{visualizationData?.type === 'line' && (
+                            <Chart
+                              options={{
+                                chart: { type: 'line', toolbar: { show: false } },
+                                stroke: { curve: 'smooth', width: 3 },
+                                colors: visualizationData.colors || ['#3B82F6'],
+                                xaxis: { categories: visualizationData.categories || [] },
+                                yaxis: { labels: { formatter: (val) => `$${val?.toLocaleString() || 0}` } },
+                                dataLabels: { enabled: false },
+                                grid: { strokeDashArray: 3 },
+                                markers: { size: 6 }
+                              }}
+                              series={visualizationData.series || []}
+                              type="line"
+                              height="100%"
+                            />
+                          )}
+                        </div>
+                        
+                        <div className="bg-green-50 rounded-lg p-3 border border-green-200">
+                          <div className="flex items-center space-x-2">
+                            <ApperIcon name="CheckCircle" className="w-4 h-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-800">
+                              Visualization successfully generated from DAX formula
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="bg-gradient-to-br from-gray-50 to-blue-50 rounded-lg p-8 min-h-80 flex items-center justify-center border-2 border-dashed border-gray-300">
+                        <div className="text-center">
+                          <div className="bg-blue-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+                            <ApperIcon name="BarChart3" className="w-8 h-8 text-blue-600" />
+                          </div>
+                          <h4 className="font-semibold text-gray-900 mb-2">Visualization Preview</h4>
+                          <p className="text-gray-600 text-sm leading-relaxed max-w-xs">
+                            Your data visualization will appear here once you run your DAX code successfully
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
