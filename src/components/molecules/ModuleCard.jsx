@@ -35,9 +35,9 @@ return (
       whileHover={{ y: -5, scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       onClick={handleCardClick}
-      className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden group touch:hover:shadow-xl min-touch"
+      className="bg-white rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden group touch:hover:shadow-xl min-touch h-80 flex flex-col"
     >
-      <div className="p-4 sm:p-6">
+<div className="p-4 sm:p-6 flex-1 flex flex-col">
         {/* Horizontal Layout: Icon + Content + Progress */}
         <div className="flex items-start space-x-4 mb-4">
           {/* Module Icon */}
@@ -48,8 +48,8 @@ return (
             />
           </div>
           
-          {/* Content Area */}
-          <div className="min-w-0 flex-1">
+{/* Content Area */}
+          <div className="min-w-0 flex-1 min-h-0">
             <h3 className="text-base sm:text-lg font-semibold text-gray-900 group-hover:text-primary transition-colors duration-200 mb-2">
               {module.title}
             </h3>
@@ -60,7 +60,7 @@ return (
             >
               {module.difficulty}
             </Badge>
-            <p className="text-gray-600 line-clamp-2 text-sm-mobile sm:text-base">
+            <p className="text-gray-600 line-clamp-3 text-sm-mobile sm:text-base">
               {module.description}
             </p>
           </div>
@@ -84,8 +84,8 @@ return (
           </div>
         </div>
         
-        {/* Continue Learning Section */}
-        <div className="mb-4 pb-4 border-b border-gray-100">
+{/* Continue Learning Section */}
+        <div className="mb-4 pb-4 border-b border-gray-100 mt-auto">
           <div className="flex items-center justify-center sm:justify-start">
             <div className="flex items-center space-x-2 text-primary group-hover:text-secondary transition-colors duration-200 font-medium">
               <span className="hidden sm:inline text-sm">Start Learning</span>
