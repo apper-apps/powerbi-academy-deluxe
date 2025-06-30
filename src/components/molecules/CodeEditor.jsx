@@ -1,7 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import Editor from '@monaco-editor/react'
 import ApperIcon from '@/components/ApperIcon'
 import Button from '@/components/atoms/Button'
+
 const CodeEditor = ({ 
   initialCode = '', 
   onValidate = null,
@@ -13,38 +15,104 @@ const CodeEditor = ({
   const [isValidating, setIsValidating] = useState(false)
   const [validationResult, setValidationResult] = useState(null)
   const [showSolution, setShowSolution] = useState(false)
+  const [editorHeight, setEditorHeight] = useState(300)
+  const editorRef = useRef(null)
+// Configure Monaco Editor for DAX language
+  useEffect(() => {
+    if (editorRef.current) {
+      const monaco = editorRef.current
+      
+      // Register DAX language
+      monaco.languages.register({ id: 'dax' })
+      
+      // Define DAX syntax highlighting
+      monaco.languages.setMonarchTokensProvider('dax', {
+        tokenizer: {
+          root: [
+            [/\b(CALCULATE|SUM|AVERAGE|COUNT|FILTER|ALL|RELATED|IF|SWITCH|FORMAT|VAR|RETURN|SUMX|COUNTX|AVERAGEX|MAXX|MINX|CONCATENATEX|DIVIDE|BLANK|TODAY|NOW)\b/i, 'keyword'],
+            [/"([^"\\]|\\.)*$/, 'string.invalid'],
+            [/"/, 'string', '@string'],
+            [/'([^'\\]|\\.)*$/, 'string.invalid'],
+            [/'/, 'string', '@string_single'],
+            [/\d*\.\d+([eE][\-+]?\d+)?/, 'number.float'],
+            [/\d+/, 'number'],
+            [/\/\/.*$/, 'comment'],
+            [/\/\*/, 'comment', '@comment'],
+            [/[=+\-*/<>!&|]+/, 'operator'],
+            [/[()[\]{}]/, 'delimiter'],
+            [/[a-zA-Z_$][\w$]*/, 'identifier']
+          ],
+          string: [
+            [/[^\\"]+/, 'string'],
+            [/\\./, 'string.escape'],
+            [/"/, 'string', '@pop']
+          ],
+          string_single: [
+            [/[^\\']+/, 'string'],
+            [/\\./, 'string.escape'],
+            [/'/, 'string', '@pop']
+          ],
+          comment: [
+            [/[^\/*]+/, 'comment'],
+            [/\*\//, 'comment', '@pop'],
+            [/[\/*]/, 'comment']
+          ]
+        }
+      })
+      
+      // Set DAX theme
+      monaco.editor.defineTheme('dax-theme', {
+        base: 'vs-dark',
+        inherit: true,
+        rules: [
+          { token: 'keyword', foreground: '569CD6', fontStyle: 'bold' },
+          { token: 'string', foreground: 'CE9178' },
+          { token: 'number', foreground: 'B5CEA8' },
+          { token: 'comment', foreground: '6A9955', fontStyle: 'italic' },
+          { token: 'operator', foreground: 'D4D4D4' },
+          { token: 'identifier', foreground: '9CDCFE' }
+        ],
+        colors: {
+          'editor.background': '#1F2937',
+          'editor.foreground': '#F3F4F6'
+        }
+      })
+    }
+  }, [])
   
-  const highlightDAX = (text) => {
-    const keywords = ['CALCULATE', 'SUM', 'AVERAGE', 'COUNT', 'FILTER', 'ALL', 'RELATED', 'IF', 'SWITCH', 'FORMAT', 'VAR', 'RETURN']
-    const functions = ['SUMX', 'COUNTX', 'AVERAGEX', 'MAXX', 'MINX', 'CONCATENATEX', 'DIVIDE', 'BLANK', 'TODAY', 'NOW']
-    const operators = ['=', '+', '-', '*', '/', '>', '<', '>=', '<=', '<>', '&&', '||']
+  // Auto-adjust editor height based on content
+  const updateEditorHeight = () => {
+    if (editorRef.current) {
+      const editor = editorRef.current
+      const lineCount = editor.getModel()?.getLineCount() || 1
+      const lineHeight = 19
+      const padding = 40
+      const minHeight = 200
+      const maxHeight = 600
+      
+      const newHeight = Math.min(Math.max(lineCount * lineHeight + padding, minHeight), maxHeight)
+      
+      if (newHeight !== editorHeight) {
+        setEditorHeight(newHeight)
+      }
+    }
+  }
+  
+  const handleEditorDidMount = (editor, monaco) => {
+    editorRef.current = editor
+    monaco.editor.setTheme('dax-theme')
     
-    let highlighted = text
-    
-    // Highlight keywords
-    keywords.forEach(keyword => {
-      const regex = new RegExp(`\\b${keyword}\\b`, 'gi')
-      highlighted = highlighted.replace(regex, `<span class="dax-keyword">${keyword.toUpperCase()}</span>`)
+    // Listen for content changes to adjust height
+    editor.onDidChangeModelContent(() => {
+      updateEditorHeight()
     })
     
-    // Highlight functions
-    functions.forEach(func => {
-      const regex = new RegExp(`\\b${func}\\b`, 'gi')
-      highlighted = highlighted.replace(regex, `<span class="dax-function">${func.toUpperCase()}</span>`)
-    })
-    
-    // Highlight strings
-    highlighted = highlighted.replace(/"([^"]*)"/g, '<span class="dax-string">"$1"</span>')
-    highlighted = highlighted.replace(/'([^']*)'/g, '<span class="dax-string">\'$1\'</span>')
-    
-    // Highlight numbers
-    highlighted = highlighted.replace(/\b\d+\.?\d*\b/g, '<span class="dax-number">$&</span>')
-    
-    // Highlight comments
-    highlighted = highlighted.replace(/\/\/.*$/gm, '<span class="dax-comment">$&</span>')
-    highlighted = highlighted.replace(/\/\*[\s\S]*?\*\//g, '<span class="dax-comment">$&</span>')
-    
-    return highlighted
+    // Initial height adjustment
+    setTimeout(updateEditorHeight, 100)
+  }
+  
+  const handleEditorChange = (value) => {
+    setCode(value || '')
   }
   
   const handleValidate = async () => {
@@ -65,8 +133,8 @@ const CodeEditor = ({
     setCode(solution)
   }
   
-return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+  return (
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden flex flex-col">
       {/* Enhanced Header */}
       <div className="bg-gradient-to-r from-gray-800 to-gray-900 px-4 sm:px-5 py-3 border-b border-gray-700">
         <div className="flex items-center justify-between">
@@ -118,37 +186,63 @@ return (
         </div>
       </div>
       
-{/* Enhanced Code Editor Area */}
-      <div className="relative bg-gray-900">
-        <textarea
+{/* Enhanced Code Editor Area - Flexible Monaco Editor */}
+      <div className="flex-1 min-h-0 bg-gray-900 relative">
+        <Editor
           value={code}
-          onChange={(e) => setCode(e.target.value)}
-          readOnly={readOnly}
-          className="w-full h-56 sm:h-72 p-4 sm:p-5 font-mono text-sm sm:text-base bg-gray-900 text-gray-100 border-none resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset code-editor"
-          placeholder={`// Enter your ${language.toUpperCase()} code here...\n// Use the hints and documentation to guide you`}
-          style={{ fontSize: '16px' }} // Prevents zoom on iOS
+          onChange={handleEditorChange}
+          onMount={handleEditorDidMount}
+          language={language === 'dax' ? 'dax' : 'javascript'}
+          theme="dax-theme"
+          height={editorHeight}
+          options={{
+            readOnly: readOnly,
+            minimap: { enabled: false },
+            scrollBeyondLastLine: false,
+            fontSize: 14,
+            lineNumbers: 'on',
+            glyphMargin: false,
+            folding: false,
+            lineDecorationsWidth: 0,
+            lineNumbersMinChars: 3,
+            renderLineHighlight: 'line',
+            automaticLayout: true,
+            wordWrap: 'on',
+            wrappingIndent: 'indent',
+            padding: { top: 16, bottom: 16 },
+            scrollbar: {
+              vertical: 'auto',
+              horizontal: 'auto',
+              verticalScrollbarSize: 8,
+              horizontalScrollbarSize: 8
+            },
+            overviewRulerBorder: false,
+            overviewRulerLanes: 0,
+            hideCursorInOverviewRuler: true,
+            contextmenu: true,
+            mouseWheelZoom: false,
+            cursorBlinking: 'smooth',
+            cursorSmoothCaretAnimation: true,
+            smoothScrolling: true,
+            tabSize: 2,
+            insertSpaces: true,
+            detectIndentation: false,
+            renderWhitespace: 'selection',
+            bracketPairColorization: { enabled: true },
+            guides: {
+              bracketPairs: true,
+              indentation: true
+            }
+          }}
         />
         
-        {/* Line Numbers */}
-        <div className="absolute left-2 top-4 sm:top-5 text-gray-500 font-mono text-sm pointer-events-none select-none">
-          {code.split('\n').map((_, index) => (
-            <div key={index} className="leading-6 text-right pr-2" style={{ minWidth: '2em' }}>
-              {index + 1}
-            </div>
-          ))}
+        {/* Resize indicator */}
+        <div className="absolute bottom-2 right-2 opacity-50 hover:opacity-100 transition-opacity">
+          <div className="flex items-center space-x-1 text-xs text-gray-400">
+            <ApperIcon name="Maximize2" className="w-3 h-3" />
+            <span>Auto-resize</span>
+          </div>
         </div>
-        
-        {language === 'dax' && (
-          <div
-            className="absolute inset-0 p-4 sm:p-5 pl-12 font-mono text-sm sm:text-base pointer-events-none overflow-hidden"
-            dangerouslySetInnerHTML={{ __html: highlightDAX(code) }}
-            style={{ 
-              color: 'transparent',
-              whiteSpace: 'pre-wrap',
-              wordWrap: 'break-word'
-            }}
-          />
-        )}
       </div>
       
 {/* Enhanced Validation Results */}
