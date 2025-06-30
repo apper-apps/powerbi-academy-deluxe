@@ -157,15 +157,14 @@ return (
             </motion.div>
           ))}
         </div>
-        
-        {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+{/* Main Content Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 sm:gap-8">
           {/* Recent Lessons */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4 }}
-            className="lg:col-span-2 bg-white rounded-xl shadow-lg p-4 sm:p-6"
+            className="bg-white rounded-xl shadow-lg p-4 sm:p-6"
           >
             <div className="flex items-center justify-between mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-xl font-semibold text-gray-900">Recent Lessons</h2>
